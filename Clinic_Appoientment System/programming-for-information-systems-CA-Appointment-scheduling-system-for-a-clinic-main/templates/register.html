@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #0056b3, #0056b3, #0056b3);
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+    }
+    
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+    }
+    
+    .auth-card {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .auth-title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        color: #333;
+    }
+    
+    .form-control {
+        border-radius: 5px;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+    }
+    
+    .btn-register {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 12px;
+        width: 100%;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-register:hover {
+        background-color: #45a049;
+    }
+    
+    .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 1rem;
+    }
+</style>
+
+<a href="/" class="back-btn">Back</a>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h2 class="auth-title">Register</h2>
+        
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        
+        <form method="post" action="/register">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="••••••" required>
+            </div>
+            
+            <button type="submit" class="btn-register">Register</button>
+        </form>
+        
+        <div class="mt-3 text-center">
+            <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Override the base template's body styles
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.style.background = 'linear-gradient(to right, #4e54c8, #8f5db7, #c9437a, #f21361)';
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        document.body.style.height = '100vh';
+        
+        // Hide the navbar for this page
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            navbar.style.display = 'none';
+        }
+        
+        // Hide the container margins
+        const container = document.querySelector('.container.mt-4');
+        if (container) {
+            container.style.marginTop = '0 !important';
+            container.style.maxWidth = '100%';
+            container.style.padding = '0';
+        }
+    });
+</script>
+{% endblock %}

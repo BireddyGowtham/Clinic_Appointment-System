@@ -1,0 +1,180 @@
+<!-- templates/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">My Dashboard</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-plus fs-1 text-primary mb-3"></i>
+                                <h5 class="card-title">Schedule Appointment</h5>
+                                <p class="card-text">Book a new appointment with our doctors.</p>
+                                <a href="/schedule" class="btn btn-primary">Schedule Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <i class="bi bi-person-circle fs-1 text-success mb-3"></i>
+                                <h5 class="card-title">My Profile</h5>
+                                <p class="card-text">View and update your personal information.</p>
+                                <a href="/profile" class="btn btn-success">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <i class="bi bi-clock-history fs-1 text-info mb-3"></i>
+                                <h5 class="card-title">Appointment History</h5>
+                                <p class="card-text">View your past and upcoming appointments.</p>
+                                <a href="#appointments" class="btn btn-info">View History</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="appointments">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">My Appointments</h5>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="appointmentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">Upcoming</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab" aria-controls="past" aria-selected="false">Past</button>
+                    </li>
+                </ul>
+                <div class="tab-content mt-3" id="appointmentTabsContent">
+                    <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                        {% set has_upcoming = false %}
+                        {% for appointment in appointments %}
+                            {% if appointment.status == 'scheduled' %}
+                                {% set has_upcoming = true %}
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h5 class="card-title">{{ appointment.type }}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">{{ appointment.doctor }}</h6>
+                                                <p class="card-text">
+                                                    <strong>Date/Time:</strong> {{ appointment.start_datetime }}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-4 text-end">
+                                                <button class="btn btn-danger cancel-appointment" data-appointment-id="{{ appointment.id }}">
+                                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if not has_upcoming %}
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>You have no upcoming appointments.
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="past" role="tabpanel" aria-labelledby="past-tab">
+                        {% set has_past = false %}
+                        {% for appointment in appointments %}
+                            {% if appointment.status != 'scheduled' %}
+                                {% set has_past = true %}
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ appointment.type }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ appointment.doctor }}</h6>
+                                        <p class="card-text">
+                                            <strong>Date/Time:</strong> {{ appointment.start_datetime }}<br>
+                                            <strong>Status:</strong> 
+                                            <span class="badge {% if appointment.status == 'completed' %}bg-success{% elif appointment.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                                                {{ appointment.status|capitalize }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if not has_past %}
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>You have no past appointments.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle appointment cancellation
+        const cancelButtons = document.querySelectorAll('.cancel-appointment');
+        
+        cancelButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const appointmentId = this.getAttribute('data-appointment-id');
+                
+                if (confirm('Are you sure you want to cancel this appointment?')) {
+                    // Send cancellation request
+                    fetch(`/cancel_appointment/${appointmentId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            // Reload the page to reflect changes
+                            window.location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while cancelling the appointment.');
+                    });
+                }
+            });
+        });
+        
+        // Check for success message in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+        
+        if (successMessage) {
+            alert(decodeURIComponent(successMessage));
+            
+            // Remove the success parameter from the URL
+            const url = new URL(window.location);
+            url.searchParams.delete('success');
+            window.history.replaceState({}, '', url);
+        }
+    });
+</script>
+{% endblock %}

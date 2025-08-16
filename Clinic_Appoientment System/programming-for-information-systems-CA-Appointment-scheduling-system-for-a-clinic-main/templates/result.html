@@ -1,0 +1,40 @@
+<!-- templates/result.html -->
+{% extends 'base.html' %}
+
+{% block title %}
+{% if success %}Success{% else %}Error{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header {% if success %}bg-success{% else %}bg-danger{% endif %} text-white">
+                <h5 class="mb-0">{% if success %}Success{% else %}Error{% endif %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="bi {% if success %}bi-check-circle{% else %}bi-x-circle{% endif %} fs-1 {% if success %}text-success{% else %}text-danger{% endif %}"></i>
+                </div>
+                
+                <p class="lead text-center">{{ message }}</p>
+                
+                <div class="d-grid gap-2 col-6 mx-auto mt-4">
+                    {% if success %}
+                    <a href="/dashboard" class="btn btn-primary">
+                        <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+                    </a>
+                    {% else %}
+                    <a href="javascript:history.back()" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Go Back
+                    </a>
+                    <a href="/schedule" class="btn btn-primary">
+                        <i class="bi bi-calendar-plus me-2"></i>Try Again
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

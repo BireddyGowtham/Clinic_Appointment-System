@@ -1,0 +1,122 @@
+/* General Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0; /* Remove the default margin from the body */
+    padding: 0; /* Remove the default padding from the body */
+    display: flex; /* Use flexbox layout model for direct children */
+    align-items: center; /* Vertically center all child elements */
+    justify-content: center; /* Horizontally center all child elements */
+    height: 100vh; /* Full viewport height */
+    text-align: center; /* Center text alignment for all child elements */
+    background: linear-gradient(90deg, rgba(58,99,180,1) 7%, rgba(251,0,81,1) 99%); /* Background with linear gradient */
+}
+
+/* Navigation Section */
+.nav {
+    margin-top: 20px; /* Space above the navigation section */
+}
+
+/* General Button Styles */
+.btn {
+    padding: 10px 20px; /* Padding inside the button */
+    color: #fff; /* Text color */
+    background-color: #007bff; /* Background color */
+    border: none; /* No borders */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underlines */
+    transition: background-color 0.3s ease; /* Smooth transition for the background color */
+}
+
+/* Hover state for buttons */
+.btn:hover {
+    background-color: #0056b3; /* Darken the button background on hover */
+}
+
+/* Styles for navigation buttons container */
+.nav-buttons {
+    position: absolute; /* Position absolutely within its closest relative parent */
+    top: 10px; /* Distance from the top */
+    right: 10px; /* Distance from the right */
+}
+
+/* Container Styles */
+.container {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center children vertically within the container */
+    align-items: center; /* Center children horizontally within the container */
+    text-align: center; /* Text align center for all texts within the container */
+    height: 100%; /* Full height of the parent element */
+}
+
+/* Header Section Styles */
+.header {
+    margin-bottom: 20px; /* Space below the header */
+}
+
+/* Styles for form elements */
+form {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Arrange children in a vertical stack */
+}
+
+/* Label Styles */
+label {
+    margin-bottom: 8px; /* Space below each label */
+}
+
+/* Input Field Styles */
+input {
+    padding: 8px; /* Padding inside input fields */
+    margin-bottom: 16px; /* Space below each input field */
+    border: 1px solid #ccc; /* Border around input fields */
+    border-radius: 4px; /* Rounded corners for input fields */
+}
+
+/* General Styles for Buttons within forms */
+button {
+    padding: 10px; /* Padding inside the button */
+    background-color: #4caf50; /* Background color */
+    color: #fff; /* Text color */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Hover State for Buttons */
+button:hover {
+    background-color: #45a049; /* Darken the background on hover */
+}
+
+/* Back Button Styles */
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    color: black;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover state for the Back button */
+.back-button:hover {
+    background-color: #e2e6ea;
+}
+
+/* Styles for Displaying Messages */
+#message {
+    margin-top: 20px; /* Space above the message */
+    color: #4caf50; /* Text color for messages */
+    font-weight: bold; /* Bold text for emphasis */
+}
+
+.schedule-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,290 @@
+<!-- templates/schedule.html -->
+{% extends 'base.html' %}
+
+{% block title %}Schedule Appointment{% endblock %}
+
+{% block content %}
+<!-- Add a modal for error messages -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="errorModalLabel">Booking Error</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="errorModalBody">
+        This time slot is already booked. Please select another time.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Schedule Medical Appointment</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/schedule">
+                    <div class="mb-3">
+                        <label for="department" class="form-label">Department</label>
+                        <select class="form-select" id="department" name="department" required>
+                            <option value="" disabled selected>Select a department</option>
+                            <option value="General Medicine">General Medicine</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Dermatology">Dermatology</option>
+                            <option value="Orthopedics">Orthopedics</option>
+                            <option value="Pediatrics">Pediatrics</option>
+                            <option value="Neurology">Neurology</option>
+                            <option value="Ophthalmology">Ophthalmology</option>
+                            <option value="Dentistry">Dentistry</option>
+                            <option value="Gynecology">Gynecology</option>
+                            <option value="Psychiatry">Psychiatry</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="doctor" class="form-label">Doctor</label>
+                        <select class="form-select" id="doctor" name="doctor" required>
+                            <option value="" disabled selected>Select a department first</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="service" class="form-label">Service</label>
+                        <select class="form-select" id="service" name="service" required>
+                            <option value="" disabled selected>Select a service</option>
+                            <option value="General Checkup">General Checkup</option>
+                            <option value="Dental Cleaning">Dental Cleaning</option>
+                            <option value="Eye Examination">Eye Examination</option>
+                            <option value="Blood Test">Blood Test</option>
+                            <option value="Vaccination">Vaccination</option>
+                            <option value="X-ray">X-ray</option>
+                            <option value="Ultrasound">Ultrasound</option>
+                            <option value="MRI Scan">MRI Scan</option>
+                            <option value="Physical Therapy">Physical Therapy</option>
+                            <option value="Mental Health Counseling">Mental Health Counseling</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="datetime" class="form-label">Date and Time</label>
+                        <input type="datetime-local" class="form-control" id="datetime" name="datetime" required>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Schedule Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Scheduling Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Choose a department that matches your medical needs</li>
+                    <li class="list-group-item">Select a doctor specialized in your condition</li>
+                    <li class="list-group-item">Choose a service that best matches your needs</li>
+                    <li class="list-group-item">Select a date and time during our working hours</li>
+                    <li class="list-group-item">Arrive 15 minutes before your appointment</li>
+                    <li class="list-group-item">Bring your insurance card and ID</li>
+                    <li class="list-group-item">Cancel at least 24 hours in advance if needed</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Doctor data organized by department
+    const doctorsByDepartment = {
+        "General Medicine": [
+            {id: "GM001", name: "Dr. John Smith"},
+            {id: "GM002", name: "Dr. Sarah Johnson"},
+            {id: "GM003", name: "Dr. Michael Brown"}
+        ],
+        "Cardiology": [
+            {id: "CA001", name: "Dr. Emily Chen"},
+            {id: "CA002", name: "Dr. Robert Wilson"},
+            {id: "CA003", name: "Dr. Jessica Martinez"}
+        ],
+        "Dermatology": [
+            {id: "DE001", name: "Dr. Lisa Taylor"},
+            {id: "DE002", name: "Dr. David Martinez"},
+            {id: "DE003", name: "Dr. Anna Rodriguez"}
+        ],
+        "Orthopedics": [
+            {id: "OR001", name: "Dr. James Anderson"},
+            {id: "OR002", name: "Dr. Patricia White"},
+            {id: "OR003", name: "Dr. Steven Johnson"}
+        ],
+        "Pediatrics": [
+            {id: "PE001", name: "Dr. Jennifer Garcia"},
+            {id: "PE002", name: "Dr. Thomas Lee"},
+            {id: "PE003", name: "Dr. Maria Gonzalez"}
+        ],
+        "Neurology": [
+            {id: "NE001", name: "Dr. Richard Harris"},
+            {id: "NE002", name: "Dr. Susan Clark"},
+            {id: "NE003", name: "Dr. William Turner"}
+        ],
+        "Ophthalmology": [
+            {id: "OP001", name: "Dr. Kevin Lewis"},
+            {id: "OP002", name: "Dr. Nancy Walker"},
+            {id: "OP003", name: "Dr. George Phillips"}
+        ],
+        "Dentistry": [
+            {id: "DE001", name: "Dr. Daniel Rodriguez"},
+            {id: "DE002", name: "Dr. Karen Hall"},
+            {id: "DE003", name: "Dr. Paul Evans"}
+        ],
+        "Gynecology": [
+            {id: "GY001", name: "Dr. Elizabeth Young"},
+            {id: "GY002", name: "Dr. Mary Allen"},
+            {id: "GY003", name: "Dr. Laura Wilson"}
+        ],
+        "Psychiatry": [
+            {id: "PS001", name: "Dr. Charles King"},
+            {id: "PS002", name: "Dr. Margaret Scott"},
+            {id: "PS003", name: "Dr. Joseph Brown"}
+        ]
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize flatpickr for datetime picker
+        flatpickr("#datetime", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minDate: "today",
+            minTime: "09:00",
+            maxTime: "17:00",
+            disable: [
+                function(date) {
+                    // Disable Sundays
+                    return (date.getDay() === 0);
+                }
+            ]
+        });
+        
+        // Get references to the department and doctor select elements
+        const departmentSelect = document.getElementById('department');
+        const doctorSelect = document.getElementById('doctor');
+        
+        // Add event listener to department select
+        departmentSelect.addEventListener('change', function() {
+            // Get the selected department
+            const selectedDepartment = this.value;
+            
+            // Clear the doctor select
+            doctorSelect.innerHTML = '';
+            
+            // If a department is selected
+            if (selectedDepartment) {
+                // Add the default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                defaultOption.textContent = 'Select a doctor';
+                doctorSelect.appendChild(defaultOption);
+                
+                // Get the doctors for the selected department
+                const doctors = doctorsByDepartment[selectedDepartment] || [];
+                
+                // Add an option for each doctor
+                doctors.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = doctor.name;
+                    doctorSelect.appendChild(option);
+                });
+            } else {
+                // If no department is selected
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                defaultOption.textContent = 'Select a department first';
+                doctorSelect.appendChild(defaultOption);
+            }
+        });
+        
+        // Initialize doctor dropdown with empty state
+        doctorSelect.innerHTML = '';
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        defaultOption.textContent = 'Select a department first';
+        doctorSelect.appendChild(defaultOption);
+
+        // Get form elements
+        const appointmentForm = document.getElementById('appointmentForm');
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        const errorModalBody = document.getElementById('errorModalBody');
+        
+        // Add form submission handler
+        appointmentForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Scheduling...';
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Submit form via AJAX
+            fetch('/schedule', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                
+                if (data.success) {
+                    // Redirect to success page or show success message
+                    window.location.href = '/dashboard?success=' + encodeURIComponent(data.message);
+                } else {
+                    // Show error message in modal
+                    errorModalBody.textContent = data.message;
+                    errorModal.show();
+                    
+                    // If it's a booking conflict, reset the time selection
+                    if (data.message.includes('already booked')) {
+                        resetTimeSelect();
+                        fetchAvailability(formData.get('doctor'), formData.get('date'));
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                
+                // Show generic error message
+                errorModalBody.textContent = 'An error occurred while scheduling your appointment. Please try again.';
+                errorModal.show();
+            });
+        });
+    });
+</script>
+{% endblock %}
